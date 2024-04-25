@@ -13,7 +13,8 @@ public:
 	/// </summary>
 	/// <param name="model_">モデルのポインタ</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
+	;
 
 	/// <summary>
 	/// 更新処理
@@ -39,5 +40,9 @@ private:
 	/// テクスチャハンドル
 	/// </summary>
 	uint32_t textureHandle_ = 0;
+	/// <summary>
+	/// ビュープロジェクション
+	/// </summary>
+	ViewProjection* viewProjection_ = nullptr;
 
 };
