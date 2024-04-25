@@ -5,7 +5,7 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() { 
-	delete model_;
+	delete blockmodel_;
 	delete player_;
 }
 
@@ -16,11 +16,11 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	textureHandle_ = TextureManager::Load("uvChecker.png");
-	model_ = Model::Create();
+	blockmodel_ = Model::Create();
 	viewProjection_.Initialize();
 
 	player_ = new Player();
-	player_->Initialize(model_, textureHandle_, &viewProjection_);
+	player_->Initialize(blockmodel_, textureHandle_, &viewProjection_);
 
 }
 
