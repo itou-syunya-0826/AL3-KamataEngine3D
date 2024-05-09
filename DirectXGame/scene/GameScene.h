@@ -8,6 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Player.h"
+#include <vector>
 
 /// <summary>
 /// ゲームシーン
@@ -49,10 +50,12 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 	
-	uint32_t textureHandle_ = 0;
+	uint32_t blockTextureHandle_ = 0;
 	Model* blockmodel_ = nullptr;
 	ViewProjection viewProjection_;
 
 	Player* player_ = nullptr;
+	std::vector<WorldTransform*> worldTransformBlocks_;
+
 	
 };

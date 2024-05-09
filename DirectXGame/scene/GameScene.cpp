@@ -7,6 +7,11 @@ GameScene::GameScene() {}
 GameScene::~GameScene() { 
 	delete blockmodel_;
 	delete player_;
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		delete worldTransformBlock;
+	}
+	worldTransformBlocks_.clear();
+
 }
 
 void GameScene::Initialize() {
@@ -15,17 +20,32 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("uvChecker.png");
+	blockTextureHandle_ = TextureManager::Load("cube/cube.jpg");
 	blockmodel_ = Model::Create();
 	viewProjection_.Initialize();
 
 	player_ = new Player();
-	player_->Initialize(blockmodel_, textureHandle_, &viewProjection_);
+	player_->Initialize(blockmodel_, blockTextureHandle_, &viewProjection_);
+
+	const uint32_t kNumBlockHorizontal = 20;
+	const float kBlockWidth = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockHorizontal);
+
+	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
+		worldTransformBlocks_[i] = new WorldTransform();
+		worldTransformBlocks_[i]->Initialize();
+		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
+		worldTransformBlocks_[i]->translation_.y = 0.0f;
+	}
 
 }
 
 void GameScene::Update() { 
 	player_->Update(); 
+
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+	
+	}
 }
 
 void GameScene::Draw() {
