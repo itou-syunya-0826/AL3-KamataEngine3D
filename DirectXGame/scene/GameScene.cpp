@@ -95,14 +95,19 @@ void GameScene::Update() {
 	debugCamera_->Update();
 
 	#ifdef _DEBUG 
-	if (input_->TriggerKey(DIK_BACK)) { 
+	//排他的論理和
+	if (input_->TriggerKey(DIK_BACK)) {
+		isDebugCameraActive_ ^= true;
+	}
+
+	/*if (input_->TriggerKey(DIK_BACK)) { 
 		if (isDebugCameraActive_) {
 			isDebugCameraActive_ = false;
 		} 
 		else {
 			isDebugCameraActive_ = true;
 		}
-	}
+	}*/
 	#endif
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
