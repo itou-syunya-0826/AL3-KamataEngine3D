@@ -12,6 +12,7 @@ GameScene::~GameScene() {
 	delete skydome_;
 	delete debugCamera_;
 	delete modelSkydome_;
+	delete mapChipField_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine){
@@ -40,6 +41,10 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+	/*GenerateBlocks();*/
 
 	//要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -169,3 +174,10 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+//void GameScene::GenerateBlocks() {
+//	//要素数
+//	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
+//	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+//
+//}
