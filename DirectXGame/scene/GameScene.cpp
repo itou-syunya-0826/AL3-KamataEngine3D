@@ -9,6 +9,9 @@ GameScene::GameScene() {}
 GameScene::~GameScene() { 
 	delete blockmodel_;
 	delete player_;
+	delete skydome_;
+	delete debugCamera_;
+	delete modelSkydome_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine){
@@ -17,8 +20,6 @@ GameScene::~GameScene() {
 	}
 	
 	worldTransformBlocks_.clear();
-
-	delete debugCamera_;
 
 }
 
@@ -32,8 +33,13 @@ void GameScene::Initialize() {
 	blockmodel_ = Model::Create();
 	viewProjection_.Initialize();
 
+
 	player_ = new Player();
 	player_->Initialize(blockmodel_, blockTextureHandle_, &viewProjection_);
+
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
 	//要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -57,27 +63,14 @@ void GameScene::Initialize() {
 		}
 	}
 
-
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
-
+	debugCamera_->SetFarZ(5000);
+	
 }
 
 void GameScene::Update() { 
 	player_->Update(); 
-
-	/*for (const auto& vt : worldTransformBlocks_) {
-		for (auto t : vt) {
-			if (!)
-		}
-	}*/
-
-	/*for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-
-		worldTransformBlock->matWorld_ = Matrix::MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-		worldTransformBlock->TransferMatrix();
-
-	}*/
+	skydome_->Update(); 
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -147,6 +140,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw();
+	skydome_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

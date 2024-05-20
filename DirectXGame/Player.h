@@ -14,7 +14,6 @@ public:
 	/// <param name="model_">モデルのポインタ</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
 	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
-	;
 
 	/// <summary>
 	/// 更新処理
