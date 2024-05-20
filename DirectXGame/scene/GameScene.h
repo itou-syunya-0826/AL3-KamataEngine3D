@@ -64,7 +64,9 @@ private: // メンバ変数
 	Model* blockmodel_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	Player* player_ = nullptr;
+	uint32_t playerTexture_ = 0u;
 	Skydome* skydome_ = nullptr;
+	uint32_t skydomeTexture_ = 0u;
 	DebugCamera* debugCamera_ = nullptr;
 	MapChipField* mapChipField_;
 

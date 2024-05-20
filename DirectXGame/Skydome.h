@@ -9,7 +9,7 @@ private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
-	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_ = 0u;
 
 	
 
@@ -20,7 +20,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, ViewProjection* viewProjection);
+	void Initialize(Model* model, ViewProjection* viewProjection, uint32_t texture);
 	/// <summary>
 	/// 更新
 	/// </summary>

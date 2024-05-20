@@ -31,5 +31,5 @@ void Player::Update() {
 /// 描画処理
 /// </summary>
 void Player::Draw() { 
-	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, *(viewProjection_), textureHandle_);
 }

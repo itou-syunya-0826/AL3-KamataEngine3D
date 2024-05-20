@@ -71,10 +71,4 @@ Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex
 
 }
 
-MapChipType MapChipField::GetNumBlockVirtical() { 
-    return MapChipType(kNumBlockVirtical);
-}
 
-MapChipType MapChipField::GetNumBlockHorizontal() { 
-    return MapChipType(kNumBlockHorizontal);
-}

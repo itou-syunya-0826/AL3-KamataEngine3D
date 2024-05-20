@@ -5,11 +5,12 @@ Skydome::Skydome() {}
 
 Skydome::~Skydome() {}
 
-void Skydome::Initialize(Model* model, ViewProjection* viewProjection) {
+void Skydome::Initialize(Model* model, ViewProjection* viewProjection,uint32_t texture) {
 	assert(model);
 	model_ = model;
 	worldTransform_.Initialize();
 	viewProjection_ = viewProjection;
+	textureHandle_ = texture;
 }
 
 void Skydome::Update() { 
@@ -17,5 +18,4 @@ void Skydome::Update() {
 }
 
 void Skydome::Draw() { 
-	model_->Draw(worldTransform_, *viewProjection_);
-}
+	model_->Draw(worldTransform_, *viewProjection_,textureHandle_); }
