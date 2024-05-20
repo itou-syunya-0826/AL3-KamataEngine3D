@@ -44,10 +44,10 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/*/// <summary>
+	/// <summary>
 	/// 表示ブロックの生成
 	/// </summary>
-	void GenerateBlocks();*/
+	void GenerateBlocks();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

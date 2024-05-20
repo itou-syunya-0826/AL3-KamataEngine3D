@@ -44,7 +44,7 @@ void GameScene::Initialize() {
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
-	/*GenerateBlocks();*/
+	GenerateBlocks();
 
 	//要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -175,9 +175,9 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-//void GameScene::GenerateBlocks() {
-//	//要素数
-//	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
-//	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
-//
-//}
+void GameScene::GenerateBlocks() {
+	//要素数
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+}
