@@ -36,24 +36,21 @@ void GameScene::Initialize() {
 	blockTextureHandle_ = TextureManager::Load("cube/cube.jpg");
 	blockmodel_ = Model::Create();
 	viewProjection_.Initialize();
-
+	//座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,17 );
 	player_ = new Player();
 	playerTexture_ = TextureManager::Load("kamata.ico");
-	player_->Initialize(blockmodel_, playerTexture_, &viewProjection_);
+	player_->Initialize(blockmodel_, playerTexture_, &viewProjection_, playerPosition);
 	
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
-	skydomeTexture_ = TextureManager::Load("sample.png");
+	skydomeTexture_ = TextureManager::Load("uvChecker.png");
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, &viewProjection_,skydomeTexture_);
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 	GenerateBlocks();
-
-	
-
-
 	
 }
 
@@ -82,14 +79,6 @@ void GameScene::Update() {
 		isDebugCameraActive_ ^= true;
 	}
 
-	/*if (input_->TriggerKey(DIK_BACK)) { 
-		if (isDebugCameraActive_) {
-			isDebugCameraActive_ = false;
-		} 
-		else {
-			isDebugCameraActive_ = true;
-		}
-	}*/
 	#endif
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();

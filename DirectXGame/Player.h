@@ -13,7 +13,7 @@ public:
 	/// </summary>
 	/// <param name="model_">モデルのポインタ</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
-	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
+	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection,const Vector3& position);
 
 	/// <summary>
 	/// 更新処理
@@ -43,5 +43,12 @@ private:
 	/// ビュープロジェクション
 	/// </summary>
 	ViewProjection* viewProjection_ = nullptr;
+	/// <summary>
+	/// 速度
+	/// </summary>
+	Vector3 velocity_ = {};
+
+	static inline const float kAcceleration = 10;
+	static inline const float kAttenuation = 10;
 
 };

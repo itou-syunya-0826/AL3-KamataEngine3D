@@ -1,5 +1,7 @@
 #include "Player.h"
 #include <cassert>
+#include <numbers>
+#include <Input.h>
 
 Player::Player() {}
 
@@ -12,11 +14,13 @@ Player::~Player() {}
 /// <param name="model"></param>
 /// <param name="textureHandle"></param>
 /// <param name="viewProjection"></param>
-void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) { 
+void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection,const Vector3& position) { 
 	assert(model);
 	model_ = model;
 	textureHandle_ = textureHandle;
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = position;
+	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	viewProjection_ = viewProjection;
 }
 
@@ -25,6 +29,31 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 /// </summary>
 void Player::Update() { 
 	worldTransform_.UpdateMatrix();
+
+	//移動入力
+	//左右移動入力
+	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		Vector3 acceleration = {};
+		if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+			acceleration.x += kAcceleration;
+		} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+			acceleration.x -= kAcceleration;
+		}
+		velocity_ += acceleration;
+	} else {
+		velocity_.x *= (1 - kAttenuation);
+		if (velocity_.x * velocity_.x < 0.001f) {
+			velocity_.x = 0;
+		}
+	}
+
+
+	//移動
+	worldTransform_.translation_ += velocity_;
+
+	//行列計算
+	worldTransform_.UpdateMatrix();
+
 }
 
 /// <summary>
