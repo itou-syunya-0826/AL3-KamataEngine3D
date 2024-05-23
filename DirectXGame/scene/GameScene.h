@@ -68,7 +68,7 @@ private: // メンバ変数
 	Skydome* skydome_ = nullptr;
 	uint32_t skydomeTexture_ = 0u;
 	DebugCamera* debugCamera_ = nullptr;
-	MapChipField* mapChipField_;
+	MapChipField* mapChipField_=nullptr;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 

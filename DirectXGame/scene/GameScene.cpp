@@ -64,7 +64,7 @@ void GameScene::Update() {
 				continue;
 			}
 			
-			worldTransformBlock->matWorld_ = Matrix::MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->matWorld_ = Matrix::MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, (Vector3&)worldTransformBlock->translation_);
 
 			worldTransformBlock->TransferMatrix();
 		}
@@ -167,7 +167,7 @@ void GameScene::GenerateBlocks() {
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+				worldTransformBlocks_[i][j]->translation_ = (MyVector3)mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
 		}
 	}

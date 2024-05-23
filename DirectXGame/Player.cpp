@@ -3,6 +3,7 @@
 #include <numbers>
 #include <Input.h>
 
+
 Player::Player() {}
 
 Player::~Player() {}
@@ -19,7 +20,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	model_ = model;
 	textureHandle_ = textureHandle;
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = position;
+	worldTransform_.translation_ = (MyVector3)position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	viewProjection_ = viewProjection;
 }
@@ -33,17 +34,17 @@ void Player::Update() {
 	//移動入力
 	//左右移動入力
 	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
-		Vector3 acceleration = {};
+		MyVector3 acceleration = {};
 		if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-			acceleration.x += kAcceleration;
+			acceleration.mValue.x += kAcceleration;
 		} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-			acceleration.x -= kAcceleration;
+			acceleration.mValue.x -= kAcceleration;
 		}
 		velocity_ += acceleration;
 	} else {
-		velocity_.x *= (1 - kAttenuation);
-		if (velocity_.x * velocity_.x < 0.001f) {
-			velocity_.x = 0;
+		velocity_.mValue.x *= (1 - kAttenuation);
+		if (velocity_.mValue.x * velocity_.mValue.x < 0.001f) {
+			velocity_.mValue.x = 0;
 		}
 	}
 

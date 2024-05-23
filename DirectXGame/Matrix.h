@@ -1,6 +1,7 @@
-﻿#pragma once
+#pragma once
 #include <Matrix4x4.h>
 #include <Vector3.h>
+#include "DataStore.h"
 
 
 class Matrix
@@ -55,7 +56,7 @@ public:
 	/// </summary>
 	/// <param name="translate">トランスレート</param>
 	/// <returns></returns>
-	static Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
+	static Matrix4x4 MakeTranslateMatrix(MyVector3 translate);
 	/// <summary>
 	/// 2.拡大縮小行列
 	/// </summary>

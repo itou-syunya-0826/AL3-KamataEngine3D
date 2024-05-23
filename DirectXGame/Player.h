@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldTransform.h"
 #include "Model.h"
+#include "DataStore.h"
 
 class Player {
 public:
@@ -46,9 +47,9 @@ private:
 	/// <summary>
 	/// 速度
 	/// </summary>
-	Vector3 velocity_ = {};
+	MyVector3 velocity_ = {};
 
-	static inline const float kAcceleration = 10;
-	static inline const float kAttenuation = 10;
+	static inline const float kAcceleration = 0.01f;
+	static inline const float kAttenuation  = 0.01f;
 
 };

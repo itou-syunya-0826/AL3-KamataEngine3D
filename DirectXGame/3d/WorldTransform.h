@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <type_traits>
 #include <wrl.h>
+#include "DataStore.h"
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
@@ -21,7 +22,7 @@ public:
 	// X,Y,Z軸回りのローカル回転角
 	Vector3 rotation_ = {0, 0, 0};
 	// ローカル座標
-	Vector3 translation_ = {0, 0, 0};
+	MyVector3 translation_ = {};
 	// ローカル → ワールド変換行列
 	Matrix4x4 matWorld_;
 	// 親となるワールド変換へのポインタ
