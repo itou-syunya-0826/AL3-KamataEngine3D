@@ -37,7 +37,7 @@ void GameScene::Initialize() {
 	blockmodel_ = Model::Create();
 	viewProjection_.Initialize();
 	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2,17 );
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18 );
 	player_ = new Player();
 	playerTexture_ = TextureManager::Load("kamata.ico");
 	player_->Initialize(blockmodel_, playerTexture_, &viewProjection_, playerPosition);
