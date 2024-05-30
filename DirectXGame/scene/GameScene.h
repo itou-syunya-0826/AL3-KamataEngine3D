@@ -12,6 +12,7 @@
 #include "DebugCamera.h"
 #include "Skydome.h"
 #include "MapChipField.h"
+#include "CameraController.h"
 
 /// <summary>
 /// ゲームシーン
@@ -69,6 +70,7 @@ private: // メンバ変数
 	uint32_t skydomeTexture_ = 0u;
 	DebugCamera* debugCamera_ = nullptr;
 	MapChipField* mapChipField_=nullptr;
+	CameraController* cameracontroller_ = nullptr;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 

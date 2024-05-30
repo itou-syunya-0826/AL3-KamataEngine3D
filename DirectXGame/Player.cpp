@@ -54,8 +54,8 @@ void Player::Update() {
 					lrDirection_ = LRDirection::kLeft;
 				}
 
-				if (velocity_.mValue.x < 0.0f) {
-					velocity_.mValue.x *= (1.0f - kAttenuation);
+				if (velocity_.mValue.x < 0.f) {
+					velocity_.mValue.x *= (1.f - kAttenuation);
 				}
 				acceleration.mValue.x -= kAcceleration;
 			}
@@ -73,7 +73,7 @@ void Player::Update() {
 			velocity_.mValue.y += kJumpAcceleration;
 		}
 
-		if (turnTimer_ > 0.0f) {
+		if (turnTimer_ > 0.f) {
 			turnTimer_ -= 1.f / 60;
 
 			float destinationRotationYTable[] = {std::numbers::pi_v<float> * 5.f / 2.f, std::numbers::pi_v<float> * 3.f / 2.f};
@@ -103,7 +103,7 @@ void Player::Update() {
 	//着地判定
 	if (onGround_) {
 		//ジャンプ開始
-		if (velocity_.mValue.y > 0.0f) {
+		if (velocity_.mValue.y > 0.f) {
 			//空中状態に移行
 			onGround_ = false;
 		}
@@ -111,12 +111,12 @@ void Player::Update() {
 		//着地
 		if (landing) {
 			//めり込み
-			worldTransform_.translation_.mValue.y = 1.f;
-			//
-			velocity_.mValue.x *= (1.0f - kAttenuation);//?
-			//
-			velocity_.mValue.y = 0.0f;
-			//
+			worldTransform_.translation_.mValue.y = 2.f;
+			//摩擦で横方向速度が減衰する
+			velocity_.mValue.x *= (1.f - kAttenuation);
+			//下方向速度をリセット
+			velocity_.mValue.y = 0.f;
+			//接地状態に移行
 			onGround_ = true;
 		}
 	}

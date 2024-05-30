@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete modelSkydome_;
 	delete mapChipField_;
+	delete cameracontroller_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine){
@@ -51,12 +52,17 @@ void GameScene::Initialize() {
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 	GenerateBlocks();
+
+	cameracontroller_ = new CameraController();
+	cameracontroller_->Initialize(&viewProjection_);
 	
 }
 
 void GameScene::Update() { 
 	player_->Update(); 
 	skydome_->Update(); 
+	debugCamera_->Update();
+	cameracontroller_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -70,8 +76,7 @@ void GameScene::Update() {
 		}
 	}
 
-	//デバックカメラの更新
-	debugCamera_->Update();
+	
 
 	#ifdef _DEBUG 
 	//排他的論理和
