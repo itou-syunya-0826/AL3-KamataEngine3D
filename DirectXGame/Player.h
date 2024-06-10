@@ -31,6 +31,10 @@ public:
 	/// </summary>
 	void Draw();
 
+	const WorldTransform& GetWorldTransform();
+	const MyVector3& GetVelocity();
+	
+
 private:
 
 	/// <summary>
@@ -52,7 +56,7 @@ private:
 	/// <summary>
 	/// 速度
 	/// </summary>
-	MyVector3 velocity_ = {};
+	MyVector3 velocity_ = {0,0,0};
 
 	LRDirection lrDirection_ = LRDirection::kRight;
 
@@ -70,14 +74,15 @@ private:
 	static inline const float kTimeTurn = 0.3f;
 
 	//重力加速度(下方向)
-	static inline const float kGravityAcceleration = 0.5f;
+	static inline const float kGravityAcceleration = 0.2f;
 	//最大落下速度(下方向)
-	static inline const float kLimitFallSpeed = 1.;
+	static inline const float kLimitFallSpeed = 0.5f;
 	//ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration = 3.45f;
 
-
+	
 
 };
+
 
 

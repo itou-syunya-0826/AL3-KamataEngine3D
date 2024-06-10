@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <type_traits>
 #include <wrl.h>
+#include "DataStore.h"
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataViewProjection {

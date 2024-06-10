@@ -3,6 +3,7 @@
 #include <cassert>
 #include "Matrix.h"
 #include "ImGuiManager.h"
+#include "CameraController.h"
 
 GameScene::GameScene() {}
 
@@ -55,6 +56,9 @@ void GameScene::Initialize() {
 
 	cameracontroller_ = new CameraController();
 	cameracontroller_->Initialize(&viewProjection_);
+	cameracontroller_->SetTarget(player_); 
+	cameracontroller_->SetMovableArea({0.f, 180.f, 0.f, 30.f});
+	cameracontroller_->Reset();
 	
 }
 
@@ -62,7 +66,7 @@ void GameScene::Update() {
 	player_->Update(); 
 	skydome_->Update(); 
 	debugCamera_->Update();
-	cameracontroller_->Update();
+	
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -90,8 +94,14 @@ void GameScene::Update() {
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
+
 	} else {
+		cameracontroller_->Update();
+		viewProjection_.matView = cameracontroller_->GetViewProjection().matView;
+		viewProjection_.matProjection = cameracontroller_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
 		viewProjection_.UpdateMatrix();
+
 	}
 		
 }

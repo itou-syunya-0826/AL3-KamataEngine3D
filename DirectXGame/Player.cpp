@@ -34,9 +34,9 @@ void Player::Update() {
 	if (onGround_) {
 		// 移動入力
 		// 左右移動入力
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		if (Input::GetInstance()->PushKey(DIK_A) || Input::GetInstance()->PushKey(DIK_D)) {
 			MyVector3 acceleration = {};
-			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+			if (Input::GetInstance()->PushKey(DIK_D)) {
 				if (lrDirection_ != LRDirection::kRight) {
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
@@ -47,7 +47,7 @@ void Player::Update() {
 					velocity_.mValue.x *= (1.0f - kAttenuation);
 				}
 				acceleration.mValue.x += kAcceleration;
-			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+			} else if (Input::GetInstance()->PushKey(DIK_A)) {
 				if (lrDirection_ != LRDirection::kLeft) {
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
@@ -128,5 +128,14 @@ void Player::Update() {
 /// 描画処理
 /// </summary>
 void Player::Draw() { 
-	model_->Draw(worldTransform_, *(viewProjection_), textureHandle_);
-}
+	model_->Draw(worldTransform_, *(viewProjection_), textureHandle_); }
+
+const WorldTransform& Player::GetWorldTransform() { return worldTransform_; }
+
+const MyVector3& Player::GetVelocity() { return velocity_; }
+
+
+
+
+
+
