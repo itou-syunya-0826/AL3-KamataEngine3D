@@ -53,6 +53,7 @@ void GameScene::Initialize() {
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 	GenerateBlocks();
+	player_->SetMapChipField(mapChipField_);
 
 	cameracontroller_ = new CameraController();
 	cameracontroller_->Initialize(&viewProjection_);

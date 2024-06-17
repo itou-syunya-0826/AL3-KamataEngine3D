@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+#include <math.h>
 
 namespace {
     std::map<std::string, MapChipType> mapChipTable = {
@@ -67,8 +68,42 @@ MapChipType MapChipField::GetChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
 
 Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) {
 
-    return Vector3(kBlockWidith * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
+    return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
 
+}
+
+IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
+
+	int32_t XIndex = static_cast<uint32_t>(
+        (position.x + kBlockWidth / 2) / kBlockWidth
+    );
+	int32_t YIndex = static_cast<uint32_t>(
+        (position.y + kBlockHeight / 2) / kBlockHeight
+    );
+
+    int32_t maxIndexY = kNumBlockVirtical - 1;
+	YIndex = maxIndexY - YIndex;
+
+    IndexSet indexSet = {};
+
+    indexSet.xIndex = XIndex;
+    indexSet.yIndex = YIndex;
+    
+    return indexSet;
+
+}
+
+Rect MapChipField::GetRectByindex(uint32_t xIndex, uint32_t yIndex) {
+    //指定ブロックの中心座標を取得する
+	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex);
+    //?
+    Rect rect;
+	rect.left = center.x - kBlockWidth / 2.0f;
+	rect.right = center.x + kBlockWidth / 2.0f;
+	rect.bottom = center.y + kBlockHeight / 2.0f;
+	rect.top = center.y - kBlockHeight / 2.0f;
+
+    return rect;
 }
 
 
