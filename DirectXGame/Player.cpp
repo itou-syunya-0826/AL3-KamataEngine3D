@@ -148,11 +148,6 @@ void Player::Update() {
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 
-
-	
-
-	
-	
 }
 
 /// <summary>
@@ -191,21 +186,29 @@ void Player::CollisionMapTop(CollisionMapInfo& info) {
 
 	MapChipType mapChipType;
 	//真上の当たり判定を行う
-	bool hit = false;
+	bool TopHit = false;
 	//左上点の当たり判定
-	IndexSet indexSet;
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
-	mapChipType = mapChipField_->GetChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	IndexSet LeftIndexSet;
+	LeftIndexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetChipTypeByIndex(LeftIndexSet.xIndex, LeftIndexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
-		hit = true;
+		TopHit = true;
+	}
+	//右上の当たり判定
+	IndexSet RightIndexSet;
+	RightIndexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetChipTypeByIndex(RightIndexSet.xIndex, RightIndexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		TopHit = true;
 	}
 
-	if (hit) {
+	//ブロックにヒット？
+	if (TopHit) {
 		//めり込みを排除する方向に移動量を設定する(?)
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+		RightIndexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+		LeftIndexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 		//めり込み先ブロックの範囲矩形(?)
-		Rect rect = mapChipField_->GetRectByindex(indexSet.xIndex, indexSet.yIndex);
+		Rect rect = mapChipField_->GetRectByindex(LeftIndexSet.xIndex, LeftIndexSet.yIndex);
 		info.move.y = std::max(0.0f, info.move.y);
 		//天井に当たったことを記録する
 		info.ceiling = true;
