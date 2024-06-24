@@ -51,12 +51,13 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
     }
 }
 
-MapChipType MapChipField::GetChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
+MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
     
+    //水平
     if (xIndex < 0 || kNumBlockHorizontal - 1 < xIndex) {
 		return MapChipType::kBlank;
     }
-
+    //垂直
 	if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
 		return MapChipType::kBlank;
 	}
@@ -96,12 +97,12 @@ IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
 Rect MapChipField::GetRectByindex(uint32_t xIndex, uint32_t yIndex) {
     //指定ブロックの中心座標を取得する
 	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex);
-    //?
+    
     Rect rect;
 	rect.left = center.x - kBlockWidth / 2.0f;
 	rect.right = center.x + kBlockWidth / 2.0f;
-	rect.bottom = center.y + kBlockHeight / 2.0f;
-	rect.top = center.y - kBlockHeight / 2.0f;
+	rect.bottom = center.y - kBlockHeight / 2.0f;
+	rect.top = center.y + kBlockHeight / 2.0f;
 
     return rect;
 }
