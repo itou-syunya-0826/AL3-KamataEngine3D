@@ -10,7 +10,7 @@ enum class LRDirection {
 	kRight,
 	kLeft,
 };
-
+//角
 enum Corner {
 	// 右下
 	kRightBottom,
@@ -67,17 +67,18 @@ public:
 
 private:
 
+	//マップ衝突判定
 	void CollisionMap(CollisionMapInfo& info);
-	void CollisionMapTop(CollisionMapInfo& info);
-	void CollisionMapBottom(CollisionMapInfo& info);
-	void CollisionMapRight(CollisionMapInfo& info);
-	void CollisionMapLeft(CollisionMapInfo& info);
+	void CollisionMapTop(CollisionMapInfo& info);//上
+	void CollisionMapBottom(CollisionMapInfo& info);//下
+	void CollisionMapRight(CollisionMapInfo& info);//右
+	void CollisionMapLeft(CollisionMapInfo& info);//左
 
 	//判定結果を反映して移動させる
 	void ProcessMovemennt(const CollisionMapInfo& info);
 	//天井に接触している場合の処理
 	void HandleCeilingCollision(const CollisionMapInfo& info);
-
+	//4つの角の内、指定した角の座標を得る関数
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
 	/// <summary>
@@ -121,16 +122,16 @@ private:
 	static inline const float kTimeTurn = 0.3f;
 
 	// 重力加速度(下方向)
-	static inline const float kGravityAcceleration = 0.09f;
+	static inline const float kGravityAcceleration = 0.01f;
 	// 最大落下速度(下方向)
 	static inline const float kLimitFallSpeed = 0.3f;
 	// ジャンプ初速(上方向)
-	static inline const float kJumpAcceleration = 1.20f;
+	static inline const float kJumpAcceleration = 0.4f;
 
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 0.8f;
 	static inline const float kheight = 0.8f;
 
-	//?
+	//余白
 	static inline const float kBlank = 0.1f;
 };
