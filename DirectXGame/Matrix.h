@@ -56,7 +56,7 @@ public:
 	/// </summary>
 	/// <param name="translate">トランスレート</param>
 	/// <returns></returns>
-	static Matrix4x4 MakeTranslateMatrix(MyVector3 translate);
+	static Matrix4x4 MakeTranslateMatrix(Vector3 translate);
 	/// <summary>
 	/// 2.拡大縮小行列
 	/// </summary>

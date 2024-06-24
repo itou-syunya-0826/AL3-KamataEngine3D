@@ -244,7 +244,7 @@ Matrix4x4 Matrix::MakeIdentity4x4()
 }
 
 
-Matrix4x4 Matrix::MakeTranslateMatrix(MyVector3 translate)
+Matrix4x4 Matrix::MakeTranslateMatrix(Vector3 translate)
 {
 
 	Matrix4x4 result =
@@ -252,7 +252,7 @@ Matrix4x4 Matrix::MakeTranslateMatrix(MyVector3 translate)
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
-		translate.mValue.x, translate.mValue.y, translate.mValue.z, 1
+		translate.x, translate.y, translate.z, 1
 	};
 
 	return result;
@@ -339,7 +339,7 @@ Matrix4x4 Matrix::MakeRotateXYZMatrix(Vector3 radian)
 
 Matrix4x4 Matrix::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
 {
-	return Multiply(Multiply(MakeScaleMatrix(scale), MakeRotateXYZMatrix(rotate)), MakeTranslateMatrix((MyVector3)translate));
+	return Multiply(Multiply(MakeScaleMatrix(scale), MakeRotateXYZMatrix(rotate)), MakeTranslateMatrix((Vector3)translate));
 }
 
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "DataStore.h"
+//#include "DataStore.h"
 #include "MapChipField.h"
 #include "Model.h"
 #include "WorldTransform.h"
@@ -63,23 +63,24 @@ public:
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
 	const WorldTransform& GetWorldTransform();
-	const MyVector3& GetVelocity();
+	const Vector3& GetVelocity();
+
+	// マップ衝突判定
+	void CollisionMap(CollisionMapInfo& info);
+	void CollisionMapTop(CollisionMapInfo& info);    // 上
+	void CollisionMapBottom(CollisionMapInfo& info); // 下
+	void CollisionMapRight(CollisionMapInfo& info);  // 右
+	void CollisionMapLeft(CollisionMapInfo& info);   // 左
+
+	// 判定結果を反映して移動させる
+	void ProcessMovemennt(const CollisionMapInfo& info);
+	// 天井に接触している場合の処理
+	void HandleCeilingCollision(const CollisionMapInfo& info);
+
+	// 4つの角の内、指定した角の座標を得る関数
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
 private:
-
-	//マップ衝突判定
-	void CollisionMap(CollisionMapInfo& info);
-	void CollisionMapTop(CollisionMapInfo& info);//上
-	void CollisionMapBottom(CollisionMapInfo& info);//下
-	void CollisionMapRight(CollisionMapInfo& info);//右
-	void CollisionMapLeft(CollisionMapInfo& info);//左
-
-	//判定結果を反映して移動させる
-	void ProcessMovemennt(const CollisionMapInfo& info);
-	//天井に接触している場合の処理
-	void HandleCeilingCollision(const CollisionMapInfo& info);
-	//4つの角の内、指定した角の座標を得る関数
-	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
 	/// <summary>
 	/// マップチップによるフィールド
@@ -105,7 +106,7 @@ private:
 	/// <summary>
 	/// 速度
 	/// </summary>
-	MyVector3 velocity_ = {0, 0, 0};
+	Vector3 velocity_ = {0, 0, 0};
 
 	LRDirection lrDirection_ = LRDirection::kRight;
 
