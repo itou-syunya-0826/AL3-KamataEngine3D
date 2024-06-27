@@ -130,14 +130,13 @@ private:
 	static inline const float kLimitFallSpeed = 0.3f;
 	// ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration = 0.4f;
-
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 0.8f;
 	static inline const float kheight = 0.8f;
-
 	//余白
 	static inline const float kBlank = 0.1f;
-
 	//着地時の速度減衰率
 	static inline const float kAttenuationLanding = 0.4f;
+	//微小な数値
+	static inline const float kSmallNumber = 0;
 };
