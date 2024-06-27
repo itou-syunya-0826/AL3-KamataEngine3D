@@ -76,6 +76,8 @@ public:
 	void ProcessMovemennt(const CollisionMapInfo& info);
 	// 天井に接触している場合の処理
 	void HandleCeilingCollision(const CollisionMapInfo& info);
+	//接地状態の切り替え処理
+	void ToggleGrounding(const CollisionMapInfo& info);
 
 	// 4つの角の内、指定した角の座標を得る関数
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
@@ -135,4 +137,7 @@ private:
 
 	//余白
 	static inline const float kBlank = 0.1f;
+
+	//着地時の速度減衰率
+	static inline const float kAttenuationLanding = 0.4f;
 };
