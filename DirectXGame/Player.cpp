@@ -281,11 +281,11 @@ void Player::ProcessMovemennt(const CollisionMapInfo& info) {
 // ④天井に接触している場合の処理
 void Player::HandleCeilingCollision(const CollisionMapInfo& info) {
 
-	// 天井に当たった？
-	if (info.ceiling || info.landing) {
-		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
-		velocity_.y = 0;
-	}
+	//// 天井に当たった？
+	//if (info.ceiling || info.landing) {
+	//	DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+	//	velocity_.y = 0;
+	//}
 }
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
