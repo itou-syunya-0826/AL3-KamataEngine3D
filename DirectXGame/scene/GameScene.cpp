@@ -10,6 +10,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() { 
 	delete playermodel_;
 	delete enemymodel_;
+	delete blockmodel_;
 	delete player_;
 	delete enemy_;
 	delete skydome_;
@@ -38,14 +39,16 @@ void GameScene::Initialize() {
 	debugCamera_->SetFarZ(5000);
 
 	blockTextureHandle_ = TextureManager::Load("cube/cube.jpg");
-	playermodel_ = Model::Create();
+	blockmodel_ = Model::Create();
+	playermodel_ = Model::CreateFromOBJ("player",true);
+	/*playermodel_ = Model::Create();*/
 	enemymodel_ = Model::Create();
 	viewProjection_.Initialize();
 	//座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18 );
 	player_ = new Player();
-	playerTexture_ = TextureManager::Load("kamata.ico");
-	player_->Initialize(playermodel_, playerTexture_, &viewProjection_, playerPosition);
+	/*playerTexture_ = TextureManager::Load("kamata.ico");*/
+	player_->Initialize(playermodel_, &viewProjection_, playerPosition);
 
 
 	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
@@ -155,8 +158,10 @@ void GameScene::Draw() {
 				continue;
 			}
 			
-			playermodel_->Draw(*worldTransformBlock, viewProjection_);
-			enemymodel_->Draw(*worldTransformBlock, viewProjection_);
+
+			blockmodel_->Draw(*worldTransformBlock, viewProjection_);
+			//playermodel_->Draw(*worldTransformBlock, viewProjection_);
+			//enemymodel_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
 

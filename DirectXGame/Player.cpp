@@ -16,10 +16,9 @@ Player::~Player() {}
 /// <param name="model"></param>
 /// <param name="textureHandle"></param>
 /// <param name="viewProjection"></param>
-void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
+void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 	model_ = model;
-	textureHandle_ = textureHandle;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = (Vector3)position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 5.f / 2.f;
@@ -139,7 +138,7 @@ void Player::Update() {
 /// 描画処理
 /// </summary>
 void Player::Draw() { 
-	model_->Draw(worldTransform_, *(viewProjection_), textureHandle_);
+	model_->Draw(worldTransform_, *(viewProjection_));
 }
 
 void Player::CollisionMap(CollisionMapInfo& info) {
@@ -160,7 +159,7 @@ void Player::CollisionMap(CollisionMapInfo& info) {
 void Player::CollisionMapTop(CollisionMapInfo& info) {
 
 	// 移動後の4つの角の座標
-	std::array<Vector3, static_cast<uint32_t>(Corner::kNumCorner)> positionsNew;
+	std::array<Vector3, static_cast<uint32_t>(Corner::kNumCorner)> positionsNew = {0};
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
@@ -217,7 +216,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info) {
 void Player::CollisionMapBottom(CollisionMapInfo& info) {
 
 	// 移動後の4つの角の座標
-	std::array<Vector3, static_cast<uint32_t>(Corner::kNumCorner)> positionsNew;
+	std::array<Vector3, static_cast<uint32_t>(Corner::kNumCorner)> positionsNew = {0};
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));

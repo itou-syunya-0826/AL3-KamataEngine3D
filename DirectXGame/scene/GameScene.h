@@ -63,6 +63,7 @@ private: // メンバ変数
 	uint32_t blockTextureHandle_ = 0;
 	ViewProjection viewProjection_;
 
+	Model* blockmodel_ = nullptr;
 	Model* playermodel_ = nullptr;
 	Model* enemymodel_ = nullptr;
 	Model* modelSkydome_ = nullptr;

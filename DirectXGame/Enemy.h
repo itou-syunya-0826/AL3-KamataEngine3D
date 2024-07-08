@@ -24,6 +24,12 @@ public:
 	void Draw();
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+	/// <summary>
+	/// 度をラジアンに変換
+	/// </summary>
+	/// <param name="dogress"></param>
+	/// <returns></returns>
+	float Dogress(float dogress);
 
 private:
 
@@ -47,6 +53,23 @@ private:
 	/// ビュープロジェクション
 	/// </summary>
 	ViewProjection* viewProjection_ = nullptr;
+
+	// 速度
+	Vector3 velocity_ = {0, 0, 0};
+
+	// 歩行の速さ
+	static inline const float kWalkSpeed = 0.05f;
+	// 最初の角度
+	static inline const float kWalkMotionAngleStart = -45.0f;
+	// 最後の角度
+	static inline const float kWalkMotionAngleEnd = 90.0f;
+	// アニメーションの周期となる時間
+	static inline const float kWalkMotionTime = 3.0f;
+
+	//経過時間
+	float walkTimer_ = 0.0f;
+	
+
 
 
 };
