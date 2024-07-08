@@ -13,6 +13,7 @@
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -62,10 +63,13 @@ private: // メンバ変数
 	uint32_t blockTextureHandle_ = 0;
 	ViewProjection viewProjection_;
 
-	Model* blockmodel_ = nullptr;
+	Model* playermodel_ = nullptr;
+	Model* enemymodel_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	Player* player_ = nullptr;
+	Enemy* enemy_ = nullptr;
 	uint32_t playerTexture_ = 0u;
+	uint32_t enemyTexture_ = 0u;
 	Skydome* skydome_ = nullptr;
 	uint32_t skydomeTexture_ = 0u;
 	DebugCamera* debugCamera_ = nullptr;

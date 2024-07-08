@@ -138,7 +138,9 @@ void Player::Update() {
 /// <summary>
 /// 描画処理
 /// </summary>
-void Player::Draw() { model_->Draw(worldTransform_, *(viewProjection_), textureHandle_); }
+void Player::Draw() { 
+	model_->Draw(worldTransform_, *(viewProjection_), textureHandle_);
+}
 
 void Player::CollisionMap(CollisionMapInfo& info) {
 	// マップ衝突判定上方向
