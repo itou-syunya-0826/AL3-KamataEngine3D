@@ -68,7 +68,7 @@ private: // メンバ変数
 	Model* enemymodel_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
+	
 	uint32_t playerTexture_ = 0u;
 	uint32_t enemyTexture_ = 0u;
 	Skydome* skydome_ = nullptr;
@@ -78,6 +78,7 @@ private: // メンバ変数
 	CameraController* cameracontroller_ = nullptr;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	std::list<Enemy*> enemies_;
 
 	bool isDebugCameraActive_ = false;
 	

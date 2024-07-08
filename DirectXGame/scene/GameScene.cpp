@@ -12,7 +12,10 @@ GameScene::~GameScene() {
 	delete enemymodel_;
 	delete blockmodel_;
 	delete player_;
-	delete enemy_;
+	for (Enemy*enemy : enemies_) {
+		delete enemy;
+	}
+	
 	delete skydome_;
 	delete debugCamera_;
 	delete modelSkydome_;
@@ -51,10 +54,20 @@ void GameScene::Initialize() {
 	player_->Initialize(playermodel_, &viewProjection_, playerPosition);
 
 
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	/*Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
 	enemy_ = new Enemy();
 	enemyTexture_ = TextureManager::Load("kamata.ico");
-	enemy_->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);
+	enemy_->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);*/
+	
+	enemyTexture_ = TextureManager::Load("kamata.ico");
+	for (int32_t i = 0; i < 1; i++) {
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18-i);
+		newEnemy->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);
+
+		enemies_.push_back(newEnemy);
+	}
+	
 	
 
 
@@ -67,7 +80,9 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 	GenerateBlocks();
 	player_->SetMapChipField(mapChipField_);
-	enemy_->SetMapChipField(mapChipField_);
+	for (Enemy* enemy : enemies_) {
+		enemy->SetMapChipField(mapChipField_);
+	}
 
 	cameracontroller_ = new CameraController();
 	cameracontroller_->Initialize(&viewProjection_);
@@ -79,7 +94,10 @@ void GameScene::Initialize() {
 
 void GameScene::Update() { 
 	player_->Update(); 
-	enemy_->Update();
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
+	
 	skydome_->Update(); 
 	debugCamera_->Update();
 	
@@ -151,7 +169,10 @@ void GameScene::Draw() {
 
 	skydome_->Draw();
 	player_->Draw();
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
+	
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock) {
