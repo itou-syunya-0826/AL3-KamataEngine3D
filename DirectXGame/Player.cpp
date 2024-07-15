@@ -137,9 +137,7 @@ void Player::Update() {
 /// <summary>
 /// 描画処理
 /// </summary>
-void Player::Draw() { 
-	model_->Draw(worldTransform_, *(viewProjection_));
-}
+void Player::Draw() { model_->Draw(worldTransform_, *(viewProjection_)); }
 
 void Player::CollisionMap(CollisionMapInfo& info) {
 	// マップ衝突判定上方向
@@ -149,11 +147,10 @@ void Player::CollisionMap(CollisionMapInfo& info) {
 	////マップ衝突判定右方向
 	CollisionMapRight(info);
 	////マップ衝突判定左方向
-	 CollisionMapLeft(info);
+	CollisionMapLeft(info);
 
 	ToggleGrounding(info);
 	HandleWallCollision(info);
-
 }
 
 void Player::CollisionMapTop(CollisionMapInfo& info) {
@@ -178,7 +175,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info) {
 	float distToIndex = 0;     // 垂直の距離
 	float midHeightoffset = 0; // 高さの中心にオフセットを加える
 	float moveY = 0;
-	float Height = kheight / 2.0f;
+	float Height = kHeight / 2.0f;
 
 	// 左上点の当たり判定
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
@@ -202,7 +199,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info) {
 		// 移動量を求める
 
 		distToIndex = rect.bottom - worldTransform_.translation_.y;
-		midHeightoffset = kheight / 2 + kBlank;
+		midHeightoffset = kHeight / 2 + kBlank;
 		moveY = distToIndex - midHeightoffset;
 
 		info.move.y = std::max(0.0f, moveY);
@@ -231,7 +228,7 @@ void Player::CollisionMapBottom(CollisionMapInfo& info) {
 	// 真下の当たり判定を行う
 	IndexSet indexSet;
 	bool BottomHit = false;
-	float Height = kheight / 2.0f;
+	float Height = kHeight / 2.0f;
 	float distToIndex = 0;     // 垂直の距離
 	float midHeightoffset = 0; // 高さの中心にオフセットを加える
 	float moveY = 0;
@@ -258,7 +255,7 @@ void Player::CollisionMapBottom(CollisionMapInfo& info) {
 		// 移動量を求める
 
 		distToIndex = rect.top - worldTransform_.translation_.y;
-		midHeightoffset = kheight / 2 + kBlank;
+		midHeightoffset = kHeight / 2 + kBlank;
 		moveY = distToIndex + midHeightoffset;
 
 		info.move.y = std::min(0.0f, moveY);
@@ -393,8 +390,8 @@ void Player::HandleCeilingCollision(const CollisionMapInfo& info) {
 
 	// 天井に当たった？
 	if (info.ceiling || info.landing) {
-	    DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
-	    velocity_.y = 0;
+		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		velocity_.y = 0;
 	}
 }
 
@@ -461,10 +458,10 @@ void Player::ToggleGrounding(const CollisionMapInfo& info) {
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	Vector3 offsetTable[static_cast<uint32_t>(Corner::kNumCorner)] = {
-	    {+kWidth / 2.0f, -kheight / 2.0f, 0}, //  kRightBottom
-	    {-kWidth / 2.0f, -kheight / 2.0f, 0}, //  kLeftBottom
-	    {+kWidth / 2.0f, +kheight / 2.0f, 0}, //  kRightTop
-	    {-kWidth / 2.0f, +kheight / 2.0f, 0}, //  kLeftTop
+	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, //  kRightBottom
+	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}, //  kLeftBottom
+	    {+kWidth / 2.0f, +kHeight / 2.0f, 0}, //  kRightTop
+	    {-kWidth / 2.0f, +kHeight / 2.0f, 0}, //  kLeftTop
 	};
 
 	return offsetTable[static_cast<uint32_t>(corner)] + center;
@@ -473,3 +470,33 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 const WorldTransform& Player::GetWorldTransform() { return worldTransform_; }
 
 const Vector3& Player::GetVelocity() { return velocity_; }
+
+Vector3 Player::GetWorldPotision() {
+
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
+}
+
+AABB Player::GetAABB() { 
+	
+	Vector3 worldPos = GetWorldPotision();
+
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+}
+
+void Player::OnCollision(const Enemy* enemy) { 
+	(void)enemy;
+	// ジャンプ開始（仮処理）
+	velocity_ += Vector3(0, kJumpAcceleration, 0);
+}

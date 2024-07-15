@@ -6,6 +6,8 @@
 
 class MapChipField;
 
+class Enemy;
+
 enum class LRDirection {
 	kRight,
 	kLeft,
@@ -38,6 +40,11 @@ struct CollisionMapInfo {
 	Vector3 move;
 };
 
+struct AABB {
+	Vector3 min;
+	Vector3 max;
+};
+
 class Player {
 public:
 	Player();
@@ -64,6 +71,12 @@ public:
 
 	const WorldTransform& GetWorldTransform();
 	const Vector3& GetVelocity();
+	//ワールド座標を取得
+	Vector3 GetWorldPotision();
+	// AABBを取得
+	AABB GetAABB();
+	// 衝突応答
+	void OnCollision(const Enemy* enemy);
 
 	// マップ衝突判定
 	void CollisionMap(CollisionMapInfo& info);
@@ -80,7 +93,6 @@ public:
 	void HandleWallCollision(const CollisionMapInfo& info);
 	// 接地状態の切り替え処理
 	void ToggleGrounding(const CollisionMapInfo& info);
-	
 
 	// 4つの角の内、指定した角の座標を得る関数
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
@@ -131,7 +143,7 @@ private:
 	static inline const float kJumpAcceleration = 0.4f;
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 0.8f;
-	static inline const float kheight = 0.8f;
+	static inline const float kHeight = 0.8f;
 	//余白
 	static inline const float kBlank = 0.1f;
 	//着地時の速度減衰率

@@ -18,6 +18,9 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
+
+
+
 class GameScene {
 
 public: // メンバ関数
@@ -50,6 +53,14 @@ public: // メンバ関数
 	/// 表示ブロックの生成
 	/// </summary>
 	void GenerateBlocks();
+	
+	bool IsCollision(const AABB& playerBox,const AABB& enemyBox);
+
+	/// <summary>
+	/// 全ての当たり判定を行う
+	/// </summary>
+	void CheckAllCollisions();
+
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

@@ -5,6 +5,8 @@
 #include "ImGuiManager.h"
 #include "CameraController.h"
 
+
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() { 
@@ -44,32 +46,21 @@ void GameScene::Initialize() {
 	blockTextureHandle_ = TextureManager::Load("cube/cube.jpg");
 	blockmodel_ = Model::Create();
 	playermodel_ = Model::CreateFromOBJ("player",true);
-	/*playermodel_ = Model::Create();*/
 	enemymodel_ = Model::Create();
 	viewProjection_.Initialize();
 	//座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18 );
 	player_ = new Player();
-	/*playerTexture_ = TextureManager::Load("kamata.ico");*/
 	player_->Initialize(playermodel_, &viewProjection_, playerPosition);
-
-
-	/*Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
-	enemy_ = new Enemy();
-	enemyTexture_ = TextureManager::Load("kamata.ico");
-	enemy_->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);*/
 	
 	enemyTexture_ = TextureManager::Load("kamata.ico");
-	for (int32_t i = 0; i < 1; i++) {
+	for (int32_t i = 0; i < 3; i++) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18-i);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10+i, 18-i);
 		newEnemy->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);
 
 		enemies_.push_back(newEnemy);
 	}
-	
-	
-
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydomeTexture_ = TextureManager::Load("uvChecker.png");
@@ -137,7 +128,8 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 
 	}
-		
+	//全ての当たり判定を行う
+	CheckAllCollisions();
 }
 
 void GameScene::Draw() {
@@ -228,3 +220,40 @@ void GameScene::GenerateBlocks() {
 		}
 	}
 }
+
+bool GameScene::IsCollision(const AABB& playerBox, const AABB& enemyBox) {
+
+	bool xCollision = (playerBox.min.x <= enemyBox.max.x && playerBox.max.x >= enemyBox.min.x);
+	bool yCollision = (playerBox.min.y <= enemyBox.max.y && playerBox.max.y >= enemyBox.min.y);
+	bool zCollision = (playerBox.min.z <= enemyBox.max.z && playerBox.max.z >= enemyBox.min.z);
+
+	return xCollision && yCollision && zCollision;
+}
+
+void GameScene::CheckAllCollisions() {
+	#pragma region CharacterCollision
+
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+
+	// 自キャラの座標
+	aabb1 = player_->GetAABB();
+
+	// 自キャラと敵弾全ての当たり判定
+	for (Enemy* enemy : enemies_) {
+	// 敵弾の座標
+		aabb2 = enemy->GetAABB();
+
+		// AABB同士の交差判定
+		if (IsCollision(aabb1, aabb2)) {
+			// 自キャラの衝突時コールバックを呼び出す
+			player_->OnCollision(enemy);
+			// 敵陣の衝突時コールバックを呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
+
+	#pragma endregion
+}
+
+

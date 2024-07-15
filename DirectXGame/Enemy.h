@@ -2,9 +2,18 @@
 #include "MapChipField.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Player.h"
+
+//struct AABB {
+//	Vector3 min;
+//	Vector3 max;
+//};
+// 前方宣言（ヘッダーなくてもPlayerが使える）
+class Player;
 
 class Enemy {
 public:
+
 	Enemy();
 	~Enemy();
 	/// <summary>
@@ -30,6 +39,13 @@ public:
 	/// <param name="dogress"></param>
 	/// <returns></returns>
 	float Dogress(float dogress);
+
+	// ワールド座標を取得
+	Vector3 GetWorldPotision();
+	// AABBを取得
+	AABB GetAABB();
+	// 衝突応答
+	void OnCollision(const Player* player);
 
 private:
 
@@ -68,6 +84,10 @@ private:
 
 	//経過時間
 	float walkTimer_ = 0.0f;
+
+	// 敵の当たり判定サイズ
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 	
 
 
