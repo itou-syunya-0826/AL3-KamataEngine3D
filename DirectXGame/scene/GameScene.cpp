@@ -1,23 +1,23 @@
 #include "GameScene.h"
+#include "CameraController.h"
+#include "ImGuiManager.h"
+#include "Matrix.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "Matrix.h"
-#include "ImGuiManager.h"
-#include "CameraController.h"
-
-
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { 
+GameScene::~GameScene() {
 	delete playermodel_;
 	delete enemymodel_;
 	delete blockmodel_;
+	delete deathparticlesmodel_;
 	delete player_;
-	for (Enemy*enemy : enemies_) {
+	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
-	
+	delete deathParticles_;
+
 	delete skydome_;
 	delete debugCamera_;
 	delete modelSkydome_;
@@ -25,13 +25,12 @@ GameScene::~GameScene() {
 	delete cameracontroller_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine){
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
 		}
 	}
-	
-	worldTransformBlocks_.clear();
 
+	worldTransformBlocks_.clear();
 }
 
 void GameScene::Initialize() {
@@ -45,18 +44,18 @@ void GameScene::Initialize() {
 
 	blockTextureHandle_ = TextureManager::Load("cube/cube.jpg");
 	blockmodel_ = Model::Create();
-	playermodel_ = Model::CreateFromOBJ("player",true);
+	playermodel_ = Model::CreateFromOBJ("player", true);
 	enemymodel_ = Model::Create();
 	viewProjection_.Initialize();
-	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18 );
+	// 座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	player_ = new Player();
 	player_->Initialize(playermodel_, &viewProjection_, playerPosition);
-	
+
 	enemyTexture_ = TextureManager::Load("kamata.ico");
 	for (int32_t i = 0; i < 3; i++) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20+i, 18-i);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i, 18 - i);
 		newEnemy->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);
 
 		enemies_.push_back(newEnemy);
@@ -65,7 +64,7 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydomeTexture_ = TextureManager::Load("uvChecker.png");
 	skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_, &viewProjection_,skydomeTexture_);
+	skydome_->Initialize(modelSkydome_, &viewProjection_, skydomeTexture_);
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
@@ -77,43 +76,51 @@ void GameScene::Initialize() {
 
 	cameracontroller_ = new CameraController();
 	cameracontroller_->Initialize(&viewProjection_);
-	cameracontroller_->SetTarget(player_); 
+	cameracontroller_->SetTarget(player_);
 	cameracontroller_->SetMovableArea({0.f, 180.f, 0.f, 30.f});
 	cameracontroller_->Reset();
-	
+
+	// 仮の生成処理、あとで消す
+	deathParticles_ = new Deathparticles;
+	deathparticlesmodel_ = Model::CreateFromOBJ("player", true);
+	Vector3 deathParticlePosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	deathParticles_->Initialize(deathparticlesmodel_, &viewProjection_, deathParticlePosition);
+
 }
 
-void GameScene::Update() { 
-	player_->Update(); 
+void GameScene::Update() {
+	player_->Update();
 	for (Enemy* enemy : enemies_) {
 		enemy->Update();
 	}
-	
-	skydome_->Update(); 
+
+	skydome_->Update();
 	debugCamera_->Update();
-	
+	// ？
+	/*if (isdeathparticle_==true) {
+		deathParticles_->Update();
+	}*/
+	deathParticles_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock) {
 				continue;
 			}
-			
+
 			worldTransformBlock->matWorld_ = Matrix::MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, (Vector3&)worldTransformBlock->translation_);
 
 			worldTransformBlock->TransferMatrix();
 		}
 	}
 
-	
-
-	#ifdef _DEBUG 
-	//排他的論理和
+#ifdef _DEBUG
+	// 排他的論理和
 	if (input_->TriggerKey(DIK_BACK)) {
 		isDebugCameraActive_ ^= true;
 	}
 
-	#endif
+#endif
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
@@ -126,9 +133,8 @@ void GameScene::Update() {
 		viewProjection_.matProjection = cameracontroller_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 		viewProjection_.UpdateMatrix();
-
 	}
-	//全ての当たり判定を行う
+	// 全ての当たり判定を行う
 	CheckAllCollisions();
 }
 
@@ -164,17 +170,21 @@ void GameScene::Draw() {
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
-	
+
+	// ？
+	if (isdeathparticle_) {
+		deathParticles_->Draw();
+	}
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock) {
 				continue;
 			}
-			
 
 			blockmodel_->Draw(*worldTransformBlock, viewProjection_);
-			//playermodel_->Draw(*worldTransformBlock, viewProjection_);
-			//enemymodel_->Draw(*worldTransformBlock, viewProjection_);
+			// playermodel_->Draw(*worldTransformBlock, viewProjection_);
+			// enemymodel_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
 
@@ -197,13 +207,13 @@ void GameScene::Draw() {
 }
 
 void GameScene::GenerateBlocks() {
-	//要素数
+	// 要素数
 	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	worldTransformBlocks_.resize(numBlockVirtical);
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
-		//一列の要素数を設定（横方向のブロック数）
+		// 一列の要素数を設定（横方向のブロック数）
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 
@@ -231,7 +241,7 @@ bool GameScene::IsCollision(const AABB& playerBox, const AABB& enemyBox) {
 }
 
 void GameScene::CheckAllCollisions() {
-	#pragma region CharacterCollision
+#pragma region CharacterCollision
 
 	// 判定対象1と2の座標
 	AABB aabb1, aabb2;
@@ -241,11 +251,12 @@ void GameScene::CheckAllCollisions() {
 
 	// 自キャラと敵弾全ての当たり判定
 	for (Enemy* enemy : enemies_) {
-	// 敵弾の座標
+		// 敵弾の座標
 		aabb2 = enemy->GetAABB();
 
 		// AABB同士の交差判定
 		if (IsCollision(aabb1, aabb2)) {
+			isdeathparticle_ = true;
 			// 自キャラの衝突時コールバックを呼び出す
 			player_->OnCollision(enemy);
 			// 敵陣の衝突時コールバックを呼び出す
@@ -253,7 +264,5 @@ void GameScene::CheckAllCollisions() {
 		}
 	}
 
-	#pragma endregion
+#pragma endregion
 }
-
-
