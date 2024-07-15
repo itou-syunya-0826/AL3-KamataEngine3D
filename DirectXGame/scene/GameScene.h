@@ -94,7 +94,7 @@ private: // メンバ変数
 	std::list<Enemy*> enemies_;
 
 	bool isDebugCameraActive_ = false;
-	bool isdeathparticle_ = false;
+	/*bool isdeathparticle_ = false;*/
 	
 	
 };

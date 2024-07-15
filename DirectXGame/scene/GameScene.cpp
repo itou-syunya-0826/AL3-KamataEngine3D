@@ -172,9 +172,10 @@ void GameScene::Draw() {
 	}
 
 	// ？
-	if (isdeathparticle_) {
+	/*if (isdeathparticle_) {
 		deathParticles_->Draw();
-	}
+	}*/
+	deathParticles_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -256,7 +257,7 @@ void GameScene::CheckAllCollisions() {
 
 		// AABB同士の交差判定
 		if (IsCollision(aabb1, aabb2)) {
-			isdeathparticle_ = true;
+			/*isdeathparticle_ = true;*/
 			// 自キャラの衝突時コールバックを呼び出す
 			player_->OnCollision(enemy);
 			// 敵陣の衝突時コールバックを呼び出す
