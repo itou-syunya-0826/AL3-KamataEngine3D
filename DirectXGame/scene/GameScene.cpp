@@ -56,7 +56,7 @@ void GameScene::Initialize() {
 	enemyTexture_ = TextureManager::Load("kamata.ico");
 	for (int32_t i = 0; i < 3; i++) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10+i, 18-i);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20+i, 18-i);
 		newEnemy->Initialize(enemymodel_, enemyTexture_, &viewProjection_, enemyPosition);
 
 		enemies_.push_back(newEnemy);
