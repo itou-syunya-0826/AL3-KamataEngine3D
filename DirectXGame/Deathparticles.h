@@ -44,7 +44,7 @@ private:
 	/// ビュープロジェクション
 	/// </summary>
 	ViewProjection* viewProjection_ = nullptr;
-
+	
 
 	// パーティクルの個数
 	static inline const uint32_t kNumParticles = 8;

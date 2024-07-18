@@ -20,8 +20,6 @@
 /// ゲームシーン
 /// </summary>
 
-
-
 class GameScene {
 
 public: // メンバ関数
@@ -95,6 +93,5 @@ private: // メンバ変数
 
 	bool isDebugCameraActive_ = false;
 	/*bool isdeathparticle_ = false;*/
-	
 	
 };
