@@ -9,8 +9,12 @@ void Deathparticles::Initialize(Model* model, ViewProjection* viewProjection, co
 		worldTransform.Initialize();
 		worldTransform.translation_ = position;
 	}
+
 	model_ = model;
 	viewProjection_ = viewProjection;
+
+	objectColor_.Initialize();
+	color_ = {1, 1, 1, 1};
 }
 
 void Deathparticles::Update() {
@@ -44,14 +48,29 @@ void Deathparticles::Update() {
 	if (isFinished_) {
 		return;
 	}
+
+	alpha_ = 1.0f - (counter_ / kDuration);
+
+	if (alpha_ <= 0.01f) {
+		isParticle_ = false;
+	}
+
+	// 左の値を決める
+	color_.w = std::clamp(alpha_, 0.0f, 1.0f);
+	// 色変更オブジェクトに色の数値を設定する
+	objectColor_.SetColor(color_);
+	// 色変更オブジェクトをVRAMに転送
+	objectColor_.TransferMatrix();
 }
 
 void Deathparticles::Draw() {
 
 	for (auto& worldTransforms : worldTransforms_) {
-		model_->Draw(worldTransforms, *(viewProjection_));
+		if (isParticle_ == true) {
+			model_->Draw(worldTransforms, *(viewProjection_), &objectColor_);
+		}
 	}
-	//終了なら何もしない
+	// 終了なら何もしない
 	if (isFinished_) {
 		return;
 	}
