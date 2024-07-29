@@ -16,6 +16,14 @@
 #include "Enemy.h"
 #include "Deathparticles.h"
 
+// ゲームのフェーズ（型）
+enum class Phase {
+	kPlay,// ゲームプレイ
+	kDeath,// デス演出
+};
+
+
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -60,6 +68,17 @@ public: // メンバ関数
 	/// </summary>
 	void CheckAllCollisions();
 
+	/// <summary>
+	/// フェーズの切り替え
+	/// </summary>
+	void ChangePhase();
+
+	/// <summary>
+	/// デスフラグのgetter
+	/// </summary>
+	/// <returns></returns>
+	bool IsFinished() const { return finished_; }
+
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -88,10 +107,16 @@ private: // メンバ変数
 	MapChipField* mapChipField_=nullptr;
 	CameraController* cameracontroller_ = nullptr;
 
+	// ゲームの現在フェーズ（変数）
+	Phase phase_;
+
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	std::list<Enemy*> enemies_;
 
+	bool isPlayerDeath = true;
 	bool isDebugCameraActive_ = false;
-	/*bool isdeathparticle_ = false;*/
+	bool isdeathparticle_ = false;
+	// 終了フラグ
+	bool finished_ = false;
 	
 };

@@ -34,6 +34,8 @@ public:
 	/// </summary>
 	void Draw();
 
+	bool Isfinished() const { return isFinished_; }
+
 private:
 
 	/// <summary>

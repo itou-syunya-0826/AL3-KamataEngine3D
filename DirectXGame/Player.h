@@ -96,6 +96,9 @@ public:
 	// 4つの角の内、指定した角の座標を得る関数
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
+	// デスフラグのgetter
+	bool isDead() const { return isDead_; }
+
 private:
 
 	/// <summary>
@@ -128,6 +131,8 @@ private:
 	float turnTimer_ = 0.0f;
 	// 接地状態フラグ
 	bool onGround_ = true;
+	// デスフラグ
+	bool isDead_ = false;
 
 	static inline const float kAcceleration = 0.01f;
 	static inline const float kAttenuation = 0.01f;
