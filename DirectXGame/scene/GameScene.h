@@ -15,11 +15,13 @@
 #include "CameraController.h"
 #include "Enemy.h"
 #include "Deathparticles.h"
+#include "Goal.h"
 
 // ゲームのフェーズ（型）
 enum class Phase {
 	kPlay,// ゲームプレイ
 	kDeath,// デス演出
+	kClear,
 };
 
 
@@ -60,8 +62,21 @@ public: // メンバ関数
 	/// 表示ブロックの生成
 	/// </summary>
 	void GenerateBlocks();
-	
+	/// <summary>
+	/// プレイヤーと敵の当たり判定
+	/// </summary>
+	/// <param name="playerBox"></param>
+	/// <param name="enemyBox"></param>
+	/// <returns></returns>
 	bool IsCollision(const AABB& playerBox,const AABB& enemyBox);
+
+	/// <summary>
+	/// プレイヤーとゴールの当たり判定
+	/// </summary>
+	/// <param name="playerBox"></param>
+	/// <param name="goalBox"></param>
+	/// <returns></returns>
+	bool IsCollision2(const AABB& playerBox, const AABB& goalBox);// 因数変えてもだめだから関数の名前を変更
 
 	/// <summary>
 	/// 全ての当たり判定を行う
@@ -74,10 +89,12 @@ public: // メンバ関数
 	void ChangePhase();
 
 	/// <summary>
-	/// デスフラグのgetter
+	/// プレイヤーが死んだときに終了するためのゲッター
 	/// </summary>
 	/// <returns></returns>
-	bool IsFinished() const { return finished_; }
+	bool IsGameover() const { return gameover_; }
+
+	bool IsClear() const { return cleared_; }
 
 
 private: // メンバ変数
@@ -97,9 +114,10 @@ private: // メンバ変数
 	Model* enemymodel_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	Model* deathparticlesmodel_ = nullptr;
+	Model* goalModel_ = nullptr;
 	Player* player_ = nullptr;
 	Deathparticles* deathParticles_ = nullptr;
-
+	Goal* goal_ = nullptr;
 	uint32_t enemyTexture_ = 0u;
 	Skydome* skydome_ = nullptr;
 	uint32_t skydomeTexture_ = 0u;
@@ -116,7 +134,8 @@ private: // メンバ変数
 	bool isPlayerDeath = true;
 	bool isDebugCameraActive_ = false;
 	bool isdeathparticle_ = false;
-	// 終了フラグ
-	bool finished_ = false;
-	
+	// ゲームオーバー用フラグ
+	bool gameover_ = false;
+	// クリア用フラグ
+	bool cleared_ = false;
 };

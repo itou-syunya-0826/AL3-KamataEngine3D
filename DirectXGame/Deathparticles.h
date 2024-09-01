@@ -7,6 +7,7 @@
 #include "Matrix.h"
 #include <ObjectColor.h>
 #include <algorithm>
+#include "GameOver.h"
 
 /// <summary>
 /// デス演出用パーティクル
@@ -46,6 +47,8 @@ private:
 	/// ビュープロジェクション
 	/// </summary>
 	ViewProjection* viewProjection_ = nullptr;
+
+	GameOver* gameover_ = nullptr;
 	
 
 	// パーティクルの個数

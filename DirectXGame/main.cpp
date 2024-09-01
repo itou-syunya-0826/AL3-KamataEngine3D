@@ -6,15 +6,21 @@
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include "TitleScene.h"
+#include "GameClear.h"
+#include "GameOver.h"
 #include "WinApp.h"
 
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
+GameClear* clearScene = nullptr;
+GameOver* deadScene = nullptr;
 
 enum class Scene {
 	kUnknown = 0,
 	kTitle,
-	kGame,
+	kGamePlay,
+	kGameClear,
+	kGameOver
 };
 
 // 現在のシーン（型）
@@ -33,12 +39,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
-	/*GameScene* gameScene = nullptr;
-	TitleScene* titleScene = nullptr;*/
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow();
+	win->CreateGameWindow(L"GC2B_02_イトウ_シュンヤ_N_Ascend");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
@@ -75,14 +79,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	primitiveDrawer->Initialize();
 #pragma endregion
 
-	// ゲームシーンの初期化
-	gameScene = new GameScene();
-	gameScene->Initialize();
-
 	// 最初のシーンの初期化
 	scene = Scene::kTitle;
+
+	// ゲームシーンの初期化
+	gameScene = new GameScene;
+	gameScene->Initialize();
+	
 	titleScene = new TitleScene;
 	titleScene->Initialize();
+
+	clearScene = new GameClear;
+	clearScene->Initialize();
+
+	deadScene = new GameOver;
+	deadScene->Initialize();
 
 	// メインループ
 	while (true) {
@@ -127,6 +138,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 各種解放
 	delete titleScene;
 	delete gameScene;
+	delete clearScene;
+	delete deadScene;
 	// 3Dモデル解放
 	Model::StaticFinalize();
 	audio->Finalize();
@@ -140,12 +153,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 }
 
 void ChangeScene() {
+
+#pragma region switch(scene)
 	switch (scene) {
 	case Scene::kTitle:
 		// スペース押したらタイトルシーンが切り替わる
-		if (titleScene->IsFinished()) {
+		if (titleScene->IsStart()) {
 			// シーン変更
-			scene = Scene::kGame;
+			scene = Scene::kGamePlay;
 			// 旧シーンの解放
 			delete titleScene;
 			titleScene = nullptr;
@@ -153,21 +168,67 @@ void ChangeScene() {
 			gameScene = new GameScene;
 			gameScene->Initialize();
 		}
+
+		
 		break;
-	case Scene::kGame:
-		// スペース押したらタイトルシーンが切り替わる
-		if (gameScene->IsFinished()) {
+	case Scene::kGamePlay:
+		// プレイヤーが死んだらタイトルに戻る
+		if (gameScene->IsGameover()) {
 			// シーン変更
-			scene = Scene::kTitle;
+			scene = Scene::kGameOver;
 			// 旧シーンの解放
 			delete gameScene;
 			gameScene = nullptr;
 			// 新シーンの生成と初期化
+			deadScene = new GameOver;
+			deadScene->Initialize();
+		}
+		// プレイヤーがゴールに触れたらゲームクリア画面に行く
+		else if (gameScene->IsClear()) {
+			// シーン変更
+			scene = Scene::kGameClear;
+			// 旧シーンの解放
+			delete gameScene;
+			gameScene = nullptr;
+			// 新シーンの生成と初期化
+			clearScene = new GameClear;
+			clearScene->Initialize();
+		}
+		break;
+
+	case Scene::kGameClear:
+		// クリア画面からタイトル画面に戻す
+		if (clearScene->IsReturn()) {
+			// シーン変更
+			scene = Scene::kTitle;
+			// 旧シーンの解放
+			delete clearScene;
+			clearScene = nullptr;
+			// 新シーンの生成と初期化
 			titleScene = new TitleScene;
 			titleScene->Initialize();
 		}
+
+		break;
+
+	case Scene::kGameOver:
+
+		// ゲームオーバー画面からプレイ画面に戻す
+		if (deadScene->IsReStart()) {
+			// シーン変更
+			scene = Scene::kGamePlay;
+			// 旧シーンの解放
+			delete deadScene;
+			deadScene = nullptr;
+			// 新シーンの生成と初期化
+			gameScene = new GameScene;
+			gameScene->Initialize();
+		}
+
 		break;
 	}
+#pragma endregion
+	
 }
 
 void UpdateScene() {
@@ -175,8 +236,14 @@ void UpdateScene() {
 	case Scene::kTitle:
 		titleScene->Update();
 		break;
-	case Scene::kGame:
+	case Scene::kGamePlay:
 		gameScene->Update();
+		break;
+	case Scene::kGameClear:
+		clearScene->Update();
+		break;
+	case Scene::kGameOver:
+		deadScene->Update();
 		break;
 	}
 }
@@ -186,8 +253,14 @@ void DrawScene() {
 	case Scene::kTitle:
 		titleScene->Draw();
 		break;
-	case Scene::kGame:
+	case Scene::kGamePlay:
 		gameScene->Draw();
+		break;
+	case Scene::kGameClear:
+		clearScene->Draw();
+		break;
+	case Scene::kGameOver:
+		deadScene->Draw();
 		break;
 	}
 }

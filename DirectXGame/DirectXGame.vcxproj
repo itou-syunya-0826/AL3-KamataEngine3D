@@ -114,6 +114,9 @@
     <ClCompile Include="DataStore.cpp" />
     <ClCompile Include="Deathparticles.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChipField.cpp" />
     <ClCompile Include="Matrix.cpp" />
@@ -150,6 +153,9 @@
     <ClInclude Include="DataStore.h" />
     <ClInclude Include="Deathparticles.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="Goal.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="MapChipField.h" />
     <ClInclude Include="math\Matrix4x4.h" />
@@ -158,6 +164,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="Skydome.h" />
     <ClInclude Include="TitleScene.h" />
@@ -216,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Sprite.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectXGame.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

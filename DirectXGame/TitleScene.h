@@ -12,7 +12,8 @@
 /// </summary>
 class TitleScene {
 public:
-	TitleScene();
+
+	TitleScene() = default;
 	~TitleScene();
 
 	void Initialize();
@@ -20,7 +21,7 @@ public:
 	void Draw();
 
 	// デスフラグのgetter
-	bool IsFinished() const { return finished_; }
+	bool IsStart() const { return isStart_; }
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
@@ -30,18 +31,19 @@ private:
 	/// <summary>
 	/// ワールド変換データ
 	/// </summary>
-	WorldTransform worldTransform_;
-	/// <summary>
-	/// モデル
-	/// </summary>
-	Model* model_ = nullptr;
+	WorldTransform worldTransform_[3];
+
 	/// <summary>
 	/// ビュープロジェクション
 	/// </summary>
-	ViewProjection viewProjection_;
-
-	Model* titlemodel_;
+	ViewProjection viewProjection_[3];
+	/// <summary>
+	/// モデル
+	/// </summary>
+	Model* titleModel_;
+	Model* buttonModel_;
+	Model* wallModel_;
 
 	// 終了フラグ
-	bool finished_ = false;
+	bool isStart_ = false;
 };

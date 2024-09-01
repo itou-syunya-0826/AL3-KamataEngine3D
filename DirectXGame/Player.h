@@ -4,8 +4,8 @@
 #include "WorldTransform.h"
 
 class MapChipField;
-
 class Enemy;
+class Goal;
 
 enum class LRDirection {
 	kRight,
@@ -72,10 +72,11 @@ public:
 	const Vector3& GetVelocity();
 	//ワールド座標を取得
 	Vector3 GetWorldPotision();
-	// AABBを取得
+	// プレイヤーのAABB（当たり判定）を取得
 	AABB GetAABB();
 	// 衝突応答
 	void OnCollision(const Enemy* enemy);
+	void OnCollision(const Goal* goal);
 
 	// マップ衝突判定
 	void CollisionMap(CollisionMapInfo& info);
@@ -98,6 +99,8 @@ public:
 
 	// デスフラグのgetter
 	bool isDead() const { return isDead_; }
+
+	bool isClear() const { return isClear_; }
 
 private:
 
@@ -133,10 +136,16 @@ private:
 	bool onGround_ = true;
 	// デスフラグ
 	bool isDead_ = false;
+	// クリアフラグ
+	bool isClear_ = false;
 
+	// 加速度
 	static inline const float kAcceleration = 0.01f;
-	static inline const float kAttenuation = 0.01f;
-	static inline const float kLimitRunSpeed = 0.3f;
+	// 速度減衰
+	static inline const float kAttenuation = 0.05f;
+	// 走行速度の上限
+	static inline const float kLimitRunSpeed = 0.2f;
+	// 方向転換にかかる時間
 	static inline const float kTimeTurn = 0.3f;
 
 	// 重力加速度(下方向)
@@ -146,13 +155,13 @@ private:
 	// ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration = 0.4f;
 	// キャラクターの当たり判定サイズ
-	static inline const float kWidth = 1.8f;
-	static inline const float kHeight = 1.6f;
-	//余白
+	static inline const float kWidth = 1.9f;
+	static inline const float kHeight = 1.7f;
+	// 余白
 	static inline const float kBlank = 0.1f;
-	//着地時の速度減衰率
+	// 着地時の速度減衰率
 	static inline const float kAttenuationLanding = 0.4f;
-	//微小な数値
+	// 微小な数値
 	static inline const float kSmallNumber = 0.8f;
 	// 着地時の速度減衰率
 	static inline const float kAttenuationWall = 0.8f;

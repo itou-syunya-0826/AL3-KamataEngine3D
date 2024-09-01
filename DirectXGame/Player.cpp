@@ -36,15 +36,18 @@ void Player::Update() {
 		// 左右移動入力
 		if (Input::GetInstance()->PushKey(DIK_A) || Input::GetInstance()->PushKey(DIK_D)) {
 			Vector3 acceleration = {};
+			// 左右加速
 			if (Input::GetInstance()->PushKey(DIK_D)) {
+				
 				if (lrDirection_ != LRDirection::kRight) {
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 					lrDirection_ = LRDirection::kRight;
 				}
-
-				if (velocity_.x < 0.0f) {
-					velocity_.x *= (1.0f - kAttenuation);
+				// 左移動中の右入力
+				if (velocity_.x < 0.f) {
+					// 速度と逆方向に入力中は急ブレーキ
+					velocity_.x *= (1.f - kAttenuation);
 				}
 				acceleration.x += kAcceleration;
 			} else if (Input::GetInstance()->PushKey(DIK_A)) {
@@ -53,8 +56,9 @@ void Player::Update() {
 					turnTimer_ = kTimeTurn;
 					lrDirection_ = LRDirection::kLeft;
 				}
-
+				// 左移動中の左入力
 				if (velocity_.x < 0.f) {
+					// 速度と逆方向に入力中は急ブレーキ
 					velocity_.x *= (1.f - kAttenuation);
 				}
 				acceleration.x -= kAcceleration;
@@ -86,6 +90,54 @@ void Player::Update() {
 	} else {
 		velocity_.y -= kGravityAcceleration;
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
+		if (Input::GetInstance()->PushKey(DIK_A) || Input::GetInstance()->PushKey(DIK_D)) {
+			Vector3 acceleration = {};
+			// 左右加速
+			if (Input::GetInstance()->PushKey(DIK_D)) {
+
+				if (lrDirection_ != LRDirection::kRight) {
+					turnFirstRotationY_ = worldTransform_.rotation_.y;
+					turnTimer_ = kTimeTurn;
+					lrDirection_ = LRDirection::kRight;
+				}
+				// 左移動中の右入力
+				if (velocity_.x < 0.f) {
+					// 速度と逆方向に入力中は急ブレーキ
+					velocity_.x *= (1.f - kAttenuation);
+				}
+				acceleration.x += kAcceleration;
+			} else if (Input::GetInstance()->PushKey(DIK_A)) {
+				if (lrDirection_ != LRDirection::kLeft) {
+					turnFirstRotationY_ = worldTransform_.rotation_.y;
+					turnTimer_ = kTimeTurn;
+					lrDirection_ = LRDirection::kLeft;
+				}
+				// 左移動中の左入力
+				if (velocity_.x < 0.f) {
+					// 速度と逆方向に入力中は急ブレーキ
+					velocity_.x *= (1.f - kAttenuation);
+				}
+				acceleration.x -= kAcceleration;
+			}
+
+			velocity_ += acceleration;
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+		} else {
+			velocity_.x *= (1 - kAttenuation);
+			if (velocity_.x * velocity_.x < 0.001f) {
+				velocity_.x = 0;
+			}
+		}
+
+		if (turnTimer_ > 0.f) {
+			turnTimer_ -= 1.f / 60;
+			float destinationRotationYTable[] = {std::numbers::pi_v<float> * 5.f / 2.f, std::numbers::pi_v<float> * 3.f / 2.f};
+			float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+			float TimeRatio = 1 - turnTimer_ / kTimeTurn;
+			float easing = TimeRatio;
+			float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
+			worldTransform_.rotation_.y = nowRotationY;
+		}
 	}
 
 	// ②移動量を加味して衝突判定する
@@ -497,9 +549,14 @@ AABB Player::GetAABB() {
 
 void Player::OnCollision(const Enemy* enemy) { 
 	(void)enemy;
-	// ジャンプ開始（仮処理）
-	//velocity_ += Vector3(0, kJumpAcceleration, 0);
 
-	// デスフラグを立てる
+	// 死んだときのフラグを立てる
 	isDead_ = true;
+}
+
+void Player::OnCollision(const Goal* goal) { 
+	(void)goal;
+
+	// クリアした時のフラグを立てる
+	isClear_ = true;
 }

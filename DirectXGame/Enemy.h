@@ -42,7 +42,7 @@ public:
 
 	// ワールド座標を取得
 	Vector3 GetWorldPotision();
-	// AABBを取得
+	// 敵のAABB（当たり判定）を取得
 	AABB GetAABB();
 	// 衝突応答
 	void OnCollision(const Player* player);

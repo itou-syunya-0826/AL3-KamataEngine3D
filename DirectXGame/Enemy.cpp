@@ -26,7 +26,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 void Enemy::Update() {
 
 	// 移動
-	worldTransform_.translation_ += velocity_;
+	//worldTransform_.translation_ += velocity_;
 
 	// タイマー加算
 	walkTimer_ += 1.f / 60.f;
@@ -36,13 +36,13 @@ void Enemy::Update() {
 	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f;
 	float worldRotateX = 0;
 	worldRotateX = Dogress(radian);
-	worldTransform_.rotation_.x = worldRotateX;
+	worldTransform_.rotation_.y = worldRotateX;
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 }
 
-void Enemy::Draw() { model_->Draw(worldTransform_, *(viewProjection_), textureHandle_); }
+void Enemy::Draw() { model_->Draw(worldTransform_, *(viewProjection_)); }
 
 float Enemy::Dogress(float dogress) { return float(dogress * M_PI / 180); }
 

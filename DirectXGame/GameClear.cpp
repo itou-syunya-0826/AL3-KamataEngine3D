@@ -1,52 +1,46 @@
-#include "TitleScene.h"
-#include "imgui.h"
+#include "GameClear.h"
+#include <DebugText.h>
+#include <Input.h>
+#include <algorithm>
+#include <cassert>
+#include <numbers>
 
-TitleScene::~TitleScene() {
-	delete titleModel_;
-	delete buttonModel_;
-	delete wallModel_;
+GameClear::~GameClear() { 
+	delete gameClearModel_;
+	delete wall3Model_;
 }
 
-void TitleScene::Initialize() {
-
+void GameClear::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 		viewProjection_[i].Initialize();
 		worldTransform_[i].Initialize();
 	}
 
-	titleModel_ = Model::CreateFromOBJ("Title", true);
-	worldTransform_[0].scale_ = Vector3(10.0f, 10.0f, 1.0f);
-	worldTransform_[0].translation_.x = 0;
-	worldTransform_[0].translation_.y = -5;
+	gameClearModel_ = Model::CreateFromOBJ("GameClear", true);
+	worldTransform_[0].translation_ = Vector3(0, 0, -45.0f);
+	worldTransform_[0].scale_ = Vector3(1.0f, 1.0f, 1.0f);
 
-	buttonModel_ = Model::CreateFromOBJ("button", true);
-	worldTransform_[1].translation_.y = -0.5;
-	worldTransform_[1].translation_.z = -41;
-
-	wallModel_ = Model::CreateFromOBJ("wall", true);
-	worldTransform_[2].translation_ = Vector3(0, 0, 5.0f);
-	worldTransform_[2].scale_ = Vector3(20.0f, 10.0f, 1.0f);
-	
+	wall3Model_ = Model::CreateFromOBJ("wall3", true);
+	worldTransform_[1].translation_ = Vector3(0, 0, 20.0f);
+	worldTransform_[1].scale_ = Vector3(20.0f, 20.0f, 1.0f);
 }
 
-void TitleScene::Update() {
+void GameClear::Update() {
 
 	if (Input::GetInstance()->PushKey(DIK_RETURN)) {
-		isStart_ = true;
+		returned_ = true;
 	}
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 		worldTransform_[i].UpdateMatrix();
 	}
-
 }
 
-void TitleScene::Draw() {
-
+void GameClear::Draw() {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -71,9 +65,8 @@ void TitleScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	titleModel_->Draw(worldTransform_[0], viewProjection_[0]);
-	buttonModel_->Draw(worldTransform_[1], viewProjection_[1]);
-	wallModel_->Draw(worldTransform_[2], viewProjection_[2]);
+	gameClearModel_->Draw(worldTransform_[0], viewProjection_[0]);
+	wall3Model_->Draw(worldTransform_[1], viewProjection_[1]);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
